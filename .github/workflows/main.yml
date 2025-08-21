@@ -1,0 +1,58 @@
+name: Build and Deploy
+on: [ push, pull_request ]
+
+jobs:
+  android:
+    name: Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          cache: gradle
+      - name: Build and Sign APK
+        env:
+          KEYSTORE_FILE_PATH: ${{ github.workspace }}/signingkey.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "${{ secrets.SIGNING_KEY }}" | base64 --decode > ${{ env.KEYSTORE_FILE_PATH }}
+          ./gradlew assembleGitContinuous
+          mv app/build/outputs/apk/git/continuous/app-git-continuous.apk CS16Wp-Android.apk
+        working-directory: android
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android
+          path: android/CS16Wp-Android.apk
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: [ android ]
+    steps:
+      - name: Fetch artifacts
+        uses: actions/download-artifact@v4
+      - name: Remove old release
+        run: |
+          TAG_NAME=${{ github.ref_name == 'main' && 'continuous' || format('continuous-{0}', github.ref_name) }}
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          if gh release list --repo ${{ github.repository }} | grep -q -e "$TAG_NAME"; then
+            gh release delete "$TAG_NAME" --yes --cleanup-tag --repo ${{ github.repository }}
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload new release
+        run: |
+          gh release create ${{ env.TAG_NAME }} --title "CS16Wp development build" --prerelease */CS16Wp-* \
+            --repo ${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
