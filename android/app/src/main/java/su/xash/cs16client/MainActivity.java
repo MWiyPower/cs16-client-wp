@@ -6,12 +6,63 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.util.TypedValue;
 
 public class MainActivity extends Activity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
+
+        FrameLayout layout = new FrameLayout(this);
+        layout.setBackgroundColor(0xFF000000);
+
+        ImageView imageView = new ImageView(this);
+        imageView.setImageResource(R.drawable.splash);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        int sizeInDp = 400;
+        int sizeInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sizeInDp, getResources().getDisplayMetrics());
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(sizeInPx, FrameLayout.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER;
+
+        layout.addView(imageView, params);
+        setContentView(layout);
+
+        AlphaAnimation fadeIn = new AlphaAnimation(0f, 1f);
+        fadeIn.setDuration(500);
+        fadeIn.setFillAfter(true);
+        imageView.startAnimation(fadeIn);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
+                fadeOut.setDuration(500);
+                fadeOut.setFillAfter(true);
+                fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                    @Override public void onAnimationStart(Animation animation) {}
+                    @Override public void onAnimationEnd(Animation animation) { launchXash(); }
+                    @Override public void onAnimationRepeat(Animation animation) {}
+                });
+                imageView.startAnimation(fadeOut);
+            }
+        }, 5000);
+    }
+
+    private void launchXash() {
         String pkg = "su.xash.engine.test";
 
         try {
@@ -21,7 +72,9 @@ public class MainActivity extends Activity {
                 pkg = "su.xash.engine";
                 getPackageManager().getPackageInfo(pkg, 0);
             } catch (PackageManager.NameNotFoundException ex) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/FWGS/xash3d-fwgs/releases/tag/continuous")).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                        "https://github.com/FWGS/xash3d-fwgs/releases/tag/continuous"))
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 finish();
                 return;
             }
