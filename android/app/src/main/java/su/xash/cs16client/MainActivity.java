@@ -54,10 +54,13 @@ public class MainActivity extends Activity {
     private void launchXash() {
         String pkg = "su.xash.engine.test";
 
-        try { getPackageManager().getPackageInfo(pkg, 0); }
-        catch (PackageManager.NameNotFoundException e) {
-            try { pkg = "su.xash.engine"; getPackageManager().getPackageInfo(pkg, 0); }
-            catch (PackageManager.NameNotFoundException ex) {
+        try { 
+            getPackageManager().getPackageInfo(pkg, 0); 
+        } catch (PackageManager.NameNotFoundException e) {
+            try { 
+                pkg = "su.xash.engine"; 
+                getPackageManager().getPackageInfo(pkg, 0); 
+            } catch (PackageManager.NameNotFoundException ex) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/FWGS/xash3d-fwgs/releases/tag/continuous"))
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 finish();
@@ -73,5 +76,4 @@ public class MainActivity extends Activity {
                 .putExtra("package", getPackageName()));
         finish();
     }
-                }    }
 }
