@@ -46,23 +46,19 @@ public class MainActivity extends Activity {
         fadeIn.setFillAfter(true);
         imageView.startAnimation(fadeIn);
 
-        new Handler().postDelayed(() -> {
-            AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
-            fadeOut.setDuration(500);
-            fadeOut.setFillAfter(true);
-            fadeOut.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {}
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    launchXash();
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {}
-            });
-            imageView.startAnimation(fadeOut);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
+                fadeOut.setDuration(500);
+                fadeOut.setFillAfter(true);
+                fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                    @Override public void onAnimationStart(Animation animation) {}
+                    @Override public void onAnimationEnd(Animation animation) { launchXash(); }
+                    @Override public void onAnimationRepeat(Animation animation) {}
+                });
+                imageView.startAnimation(fadeOut);
+            }
         }, 5000);
     }
 
