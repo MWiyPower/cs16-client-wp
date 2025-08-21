@@ -1,4 +1,4 @@
-package su.xash.cs16client;
+package wp.xash.cs16client;
 
 import android.app.Activity;
 import android.content.ComponentName;
