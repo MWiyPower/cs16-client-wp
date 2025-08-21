@@ -5,12 +5,12 @@ import java.time.temporal.ChronoUnit
 apply plugin: "com.android.application"
 
 android {
-	namespace = "su.xash.cs16client"
+	namespace = "wp.xash.cs16client"
 	ndkVersion = "28.2.13676358"
 	compileSdk = 36
 
 	defaultConfig {
-		applicationId = "su.xash.cs16client"
+		applicationId = "wp.xash.cs16client"
 		versionName = "1.35-" + getGitHash()
 		versionCode = getBuildNum()
 		minSdk = 21
@@ -80,7 +80,7 @@ android {
 	productFlavors {
 		create("googlePlay") {
 			dimension = "version"
-			applicationId = "in.celest.xash3d.cs16client"
+			applicationId = "in.celest.wp.xash3d.cs16client"
 			buildConfigField("Boolean", "IS_GOOGLE_PLAY_BUILD", "true")
 		}
 
