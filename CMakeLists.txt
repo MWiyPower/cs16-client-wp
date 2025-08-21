@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(cs16-client)
+project(cs16wp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
@@ -27,11 +27,6 @@ set(SERVER_INSTALL_DIR "dlls" CACHE STRING "Server library location.")
 # 	add_compile_options(/fsanitize=address)
 # 	add_link_options(/fsanitize=address)
 # endif()
-
-if(VITA)
-	message(STATUS "Building for PS Vita")
-	add_compile_options(-fno-use-cxa-atexit)
-endif()
 
 if(BUILD_CLIENT)
 	add_subdirectory(cl_dll)
@@ -110,36 +105,6 @@ else()
 		FILES "${EXTRAS_OUTPUT}"
 		DESTINATION ${GAME_DIR}
 	)
-endif()
-
-if(VITA)
-	install(
-		FILES
-		"${CMAKE_CURRENT_BINARY_DIR}/config.cfg"
-		"${CMAKE_CURRENT_BINARY_DIR}/video.cfg"
-		"${CMAKE_CURRENT_BINARY_DIR}/opengl.cfg"
-		DESTINATION "${GAME_DIR}/"
-	)
-
-	install(
-		FILES
-		"${CMAKE_CURRENT_BINARY_DIR}/kb_def.lst"
-		DESTINATION "${GAME_DIR}/gfx/shell"
-	)
-endif()
-
-if(WIN32)
-	set(CPACK_GENERATOR "ZIP")
-	set(CPACK_PACKAGE_FILE_NAME "CS16Client-${CMAKE_SYSTEM_NAME}-${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}")
-elseif(VITA)
-	set(CPACK_GENERATOR "ZIP")
-	set(CPACK_PACKAGE_FILE_NAME "CS16Client-PSVita")
-elseif(APPLE)
-	set(CPACK_GENERATOR "ZIP")
-	set(CPACK_PACKAGE_FILE_NAME "CS16Client-macOS-${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}")
-else()
-	set(CPACK_GENERATOR "TGZ")
-	set(CPACK_PACKAGE_FILE_NAME "CS16Client-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
