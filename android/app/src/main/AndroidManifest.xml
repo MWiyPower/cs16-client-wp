@@ -11,21 +11,20 @@
 
         <activity
             android:name=".MainActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="landscape"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <intent-filter>
-                <action android:name="su.xash.engine.MOD" />
-            </intent-filter>
         </activity>
+
     </application>
 
     <queries>
         <package android:name="su.xash.engine" />
         <package android:name="su.xash.engine.test" />
     </queries>
+
 </manifest>
