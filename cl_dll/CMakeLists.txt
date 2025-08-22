@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 project(client)
 
 set(CLIENT_LIB client)
+set(GAME_DIR cstrike)
+set(CLIENT_INSTALL_DIR cl_dlls)
 
 file(GLOB CS_CLIENT_SRC "*.cpp")
 file(GLOB CS_EV_SRC "events/*.cpp")
