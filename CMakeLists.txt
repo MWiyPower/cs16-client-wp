@@ -36,9 +36,9 @@ set(SERVER_INSTALL_DIR "dlls" CACHE STRING "Server library location.")
 #         set(MESON_BUILD_TYPE release)
 # endif()
 
-if(BUILD_CLIENT)
-        add_subdirectory(cl_dll)
-endif()
+#if(BUILD_CLIENT)
+#        add_subdirectory(cl_dll)
+#endif()
 
 if(BUILD_SERVER)
         # ExternalProject_Add(
